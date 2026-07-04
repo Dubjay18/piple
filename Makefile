@@ -1,0 +1,2 @@
+start:
+	./backend/main.go .

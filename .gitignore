@@ -1,0 +1,17 @@
+# --- web (Vite frontend) ---
+web/node_modules/
+web/dist/
+web/.vite/
+*.local
+
+# --- backend (Go) ---
+backend/tmp/
+backend/*.exe
+
+# --- env / secrets ---
+.env
+.env.*
+!.env.example
+
+# --- OS / editor ---
+.DS_Store
