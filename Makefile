@@ -13,4 +13,4 @@ migrate-down:
 
 sqlc:
 	#generate sql commands
-	sqlc generate
+	cd backend && sqlc generate
