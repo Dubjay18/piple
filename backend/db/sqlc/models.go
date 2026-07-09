@@ -91,6 +91,7 @@ type User struct {
 	Password  string           `json:"password"`
 	Role      string           `json:"role"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
+	DeletedAt pgtype.Timestamp `json:"deleted_at"`
 }
 
 type Wallet struct {

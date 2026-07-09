@@ -14,6 +14,10 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserByID(ctx context.Context, id pgtype.UUID) (User, error)
+	SoftDeleteUser(ctx context.Context, id pgtype.UUID) (User, error)
+	// Partial update: unset (nil) args keep the existing value. Password is
+	// excluded — that's UpdateUserPassword's job.
+	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
 	UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (User, error)
 }
 

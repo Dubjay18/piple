@@ -28,6 +28,10 @@ func main() {
 		v1 := router.Group("/api/v1")
 		v1.GET("/health", h.HealthCheck)
 
+		users := v1.Group("/users") // , handler.AuthMiddleware(), handler.AdminOnly() 
+	    users.POST("", h.CreateUser)
+	    users.PATCH("/:id", h.UpdateUser)
+	    users.DELETE("/:id", h.DeleteUser)
 
 		log.Printf("server running on port %s", PORT)
 		router.Run(PORT)
