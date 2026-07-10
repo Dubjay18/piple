@@ -12,5 +12,5 @@ migrate-down:
 	migrate -path ./backend/db/migrations -database "postgres://postgres:password@localhost:5432/postgres?sslmode=disable" down 1
 
 sqlc:
-	#generate sql commands
+	# Generate SQL commands
 	sqlc generate

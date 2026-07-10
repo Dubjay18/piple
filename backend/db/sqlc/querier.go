@@ -11,9 +11,12 @@ import (
 )
 
 type Querier interface {
+	CreateRefreshToken(ctx context.Context, arg CreateRefreshTokenParams) (RefreshToken, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	GetRefreshTokenByHash(ctx context.Context, tokenHash string) (RefreshToken, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	GetUserByID(ctx context.Context, id pgtype.UUID) (User, error)
+	RevokeRefreshToken(ctx context.Context, tokenHash string) (RefreshToken, error)
 	SoftDeleteUser(ctx context.Context, id pgtype.UUID) (User, error)
 	// Partial update: unset (nil) args keep the existing value. Password is
 	// excluded — that's UpdateUserPassword's job.

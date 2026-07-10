@@ -163,8 +163,8 @@ func (h *Handler) DeleteUser(c *gin.Context) {
 	})
 }
 
-func userResponseFromUser(u dbq.User) model.UserResponse {
-	return model.UserResponse{
+func userResponseFromUser(u dbq.User) model.UserWriteResponse {
+	return model.UserWriteResponse{
 		ID:        helpers.UUIDToString(u.ID),
 		FirstName: u.FirstName,
 		LastName:  u.LastName,
