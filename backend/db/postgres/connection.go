@@ -7,8 +7,7 @@ import (
 	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-
-	"github.com/valentineejk/piple/db/sqlc"
+	dbq "github.com/valentineejk/piple/db/sqlc"
 )
 
 func Connection() (*dbq.Queries, *pgxpool.Pool) {

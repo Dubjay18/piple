@@ -8,7 +8,6 @@ package dbq
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -24,7 +23,7 @@ RETURNING id, user_id, first_name, last_name, dial_code, phone, resume, country,
 `
 
 type CreateEmployeeParams struct {
-	UserID        uuid.UUID        `json:"user_id"`
+	UserID        pgtype.UUID      `json:"user_id"`
 	FirstName     string           `json:"first_name"`
 	LastName      string           `json:"last_name"`
 	DialCode      string           `json:"dial_code"`
@@ -34,7 +33,7 @@ type CreateEmployeeParams struct {
 	Address       *string          `json:"address"`
 	State         *string          `json:"state"`
 	Level         *string          `json:"level"`
-	SalaryCodeID  uuid.UUID        `json:"salary_code_id"`
+	SalaryCodeID  pgtype.UUID      `json:"salary_code_id"`
 	Department    *string          `json:"department"`
 	BankName      *string          `json:"bank_name"`
 	BankCode      *string          `json:"bank_code"`
@@ -92,9 +91,9 @@ DELETE FROM employees WHERE id = $1
 RETURNING id
 `
 
-func (q *Queries) DeleteEmployee(ctx context.Context, id uuid.UUID) (uuid.UUID, error) {
+func (q *Queries) DeleteEmployee(ctx context.Context, id pgtype.UUID) (pgtype.UUID, error) {
 	row := q.db.QueryRow(ctx, deleteEmployee, id)
-	var id_2 uuid.UUID
+	var id_2 pgtype.UUID
 	err := row.Scan(&id_2)
 	return id_2, err
 }
@@ -103,7 +102,7 @@ const getEmployeeByUserID = `-- name: GetEmployeeByUserID :one
 SELECT id, user_id, first_name, last_name, dial_code, phone, resume, country, address, state, status, level, salary_code_id, department, bank_name, bank_code, account_number, hired_at, updated_at, created_at FROM employees WHERE user_id = $1
 `
 
-func (q *Queries) GetEmployeeByUserID(ctx context.Context, userID uuid.UUID) (Employee, error) {
+func (q *Queries) GetEmployeeByUserID(ctx context.Context, userID pgtype.UUID) (Employee, error) {
 	row := q.db.QueryRow(ctx, getEmployeeByUserID, userID)
 	var i Employee
 	err := row.Scan(
@@ -171,7 +170,7 @@ type UpdateEmployeeParams struct {
 	BankCode      *string          `json:"bank_code"`
 	AccountNumber *string          `json:"account_number"`
 	HiredAt       pgtype.Timestamp `json:"hired_at"`
-	ID            uuid.UUID        `json:"id"`
+	ID            pgtype.UUID      `json:"id"`
 }
 
 func (q *Queries) UpdateEmployee(ctx context.Context, arg UpdateEmployeeParams) (Employee, error) {

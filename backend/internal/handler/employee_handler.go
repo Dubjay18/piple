@@ -5,30 +5,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgtype"
 
 	"github.com/valentineejk/piple/db/sqlc"
-	"github.com/valentineejk/piple/helpers"
-	model "github.com/valentineejk/piple/modal"
+	"github.com/valentineejk/piple/internal/model"
 )
-
-type Handler struct {
-	queries *dbq.Queries
-}
-
-func New(queries *dbq.Queries) *Handler {
-	return &Handler{
-		queries: queries,
-	}
-}
-
-// healthcheck
-func (h *Handler) HealthCheck(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "service is running fine",
-	})
-}
 
 func toEmployeeResponse(e dbq.Employee) model.Employee {
 	return model.Employee{
@@ -49,9 +31,9 @@ func toEmployeeResponse(e dbq.Employee) model.Employee {
 		BankName:      e.BankName,
 		BankCode:      e.BankCode,
 		AccountNumber: e.AccountNumber,
-		HiredAt:       helpers.PgTimestampToTime(e.HiredAt),
-		UpdatedAt:     helpers.PgTimestampToTime(e.UpdatedAt),
-		CreatedAt:     helpers.PgTimestampToTime(e.CreatedAt),
+		HiredAt:       e.HiredAt,
+		UpdatedAt:     e.UpdatedAt,
+		CreatedAt:     e.CreatedAt,
 	}
 }
 
@@ -99,7 +81,7 @@ func (h *Handler) Create_employee(c *gin.Context) {
 		BankName:      req.BankName,
 		BankCode:      req.BankCode,
 		AccountNumber: req.AccountNumber,
-		HiredAt:       helpers.TimeToPgTimestamp(req.HiredAt),
+		HiredAt:       req.HiredAt,
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -117,8 +99,8 @@ func (h *Handler) Create_employee(c *gin.Context) {
 
 func (h *Handler) Update_employee(c *gin.Context) {
 
-	id, err := uuid.Parse(c.Param("id"))
-	if err != nil {
+	var id pgtype.UUID
+	if err := id.Scan(c.Param("id")); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid employee id"})
 		return
 	}
@@ -144,12 +126,12 @@ func (h *Handler) Update_employee(c *gin.Context) {
 		State:         req.State,
 		Status:        req.Status,
 		Level:         req.Level,
-		SalaryCodeID:  helpers.UUIDToPgUUID(req.SalaryCodeID),
+		SalaryCodeID:  req.SalaryCodeID,
 		Department:    req.Department,
 		BankName:      req.BankName,
 		BankCode:      req.BankCode,
 		AccountNumber: req.AccountNumber,
-		HiredAt:       helpers.TimeToPgTimestamp(req.HiredAt),
+		HiredAt:       req.HiredAt,
 	})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -171,13 +153,13 @@ func (h *Handler) Update_employee(c *gin.Context) {
 
 func (h *Handler) Delete_employee(c *gin.Context) {
 
-	id, err := uuid.Parse(c.Param("id"))
-	if err != nil {
+	var id pgtype.UUID
+	if err := id.Scan(c.Param("id")); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid employee id"})
 		return
 	}
 
-	_, err = h.queries.DeleteEmployee(c.Request.Context(), id)
+	_, err := h.queries.DeleteEmployee(c.Request.Context(), id)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "employee not found"})

@@ -5,26 +5,25 @@
 package dbq
 
 import (
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Employee struct {
-	ID           uuid.UUID `json:"id"`
-	UserID       uuid.UUID `json:"user_id"`
-	FirstName    string    `json:"first_name"`
-	LastName     string    `json:"last_name"`
-	DialCode     string    `json:"dial_code"`
-	Phone        string    `json:"phone"`
-	Resume       *string   `json:"resume"`
-	Country      *string   `json:"country"`
-	Address      *string   `json:"address"`
-	State        *string   `json:"state"`
-	Status       string    `json:"status"`
-	Level        *string   `json:"level"`
-	SalaryCodeID uuid.UUID `json:"salary_code_id"`
-	Department   *string   `json:"department"`
-	BankName     *string   `json:"bank_name"`
+	ID           pgtype.UUID `json:"id"`
+	UserID       pgtype.UUID `json:"user_id"`
+	FirstName    string      `json:"first_name"`
+	LastName     string      `json:"last_name"`
+	DialCode     string      `json:"dial_code"`
+	Phone        string      `json:"phone"`
+	Resume       *string     `json:"resume"`
+	Country      *string     `json:"country"`
+	Address      *string     `json:"address"`
+	State        *string     `json:"state"`
+	Status       string      `json:"status"`
+	Level        *string     `json:"level"`
+	SalaryCodeID pgtype.UUID `json:"salary_code_id"`
+	Department   *string     `json:"department"`
+	BankName     *string     `json:"bank_name"`
 	// Paystack bank code
 	BankCode      *string          `json:"bank_code"`
 	AccountNumber *string          `json:"account_number"`
@@ -34,9 +33,9 @@ type Employee struct {
 }
 
 type PaymentRequest struct {
-	ID uuid.UUID `json:"id"`
+	ID pgtype.UUID `json:"id"`
 	// procurement team member, FK users.id
-	RequestedBy uuid.UUID `json:"requested_by"`
+	RequestedBy pgtype.UUID `json:"requested_by"`
 	// CEO who approved/rejected, FK users.id
 	ReviewedBy      pgtype.UUID `json:"reviewed_by"`
 	Amount          int64       `json:"amount"`
@@ -53,11 +52,11 @@ type PaymentRequest struct {
 }
 
 type Payout struct {
-	ID           uuid.UUID `json:"id"`
-	UserID       uuid.UUID `json:"user_id"`
-	SalaryCodeID uuid.UUID `json:"salary_code_id"`
-	Amount       int64     `json:"amount"`
-	Status       string    `json:"status"`
+	ID           pgtype.UUID `json:"id"`
+	UserID       pgtype.UUID `json:"user_id"`
+	SalaryCodeID pgtype.UUID `json:"salary_code_id"`
+	Amount       int64       `json:"amount"`
+	Status       string      `json:"status"`
 	// first day of the paid month, e.g. 2026-07-01
 	PayPeriod pgtype.Date      `json:"pay_period"`
 	PaidAt    pgtype.Timestamp `json:"paid_at"`
@@ -65,16 +64,16 @@ type Payout struct {
 }
 
 type SalaryCode struct {
-	ID     uuid.UUID `json:"id"`
-	Code   string    `json:"code"`
-	Level  string    `json:"level"`
-	Amount int64     `json:"amount"`
+	ID     pgtype.UUID `json:"id"`
+	Code   string      `json:"code"`
+	Level  string      `json:"level"`
+	Amount int64       `json:"amount"`
 }
 
 type Transaction struct {
-	ID               uuid.UUID        `json:"id"`
-	WalletID         uuid.UUID        `json:"wallet_id"`
-	UserID           uuid.UUID        `json:"user_id"`
+	ID               pgtype.UUID      `json:"id"`
+	WalletID         pgtype.UUID      `json:"wallet_id"`
+	UserID           pgtype.UUID      `json:"user_id"`
 	PayoutID         pgtype.UUID      `json:"payout_id"`
 	PaymentRequestID pgtype.UUID      `json:"payment_request_id"`
 	Amount           int64            `json:"amount"`
@@ -85,7 +84,7 @@ type Transaction struct {
 }
 
 type User struct {
-	ID        uuid.UUID        `json:"id"`
+	ID        pgtype.UUID      `json:"id"`
 	FirstName string           `json:"first_name"`
 	LastName  string           `json:"last_name"`
 	Email     string           `json:"email"`
@@ -95,8 +94,8 @@ type User struct {
 }
 
 type Wallet struct {
-	ID       uuid.UUID `json:"id"`
-	Currency string    `json:"currency"`
+	ID       pgtype.UUID `json:"id"`
+	Currency string      `json:"currency"`
 	// internal ledger balance, source of truth for available funds before disbursing
 	Balance   int64            `json:"balance"`
 	UpdatedAt pgtype.Timestamp `json:"updated_at"`
@@ -104,12 +103,12 @@ type Wallet struct {
 }
 
 type WalletTopup struct {
-	ID       uuid.UUID `json:"id"`
-	WalletID uuid.UUID `json:"wallet_id"`
+	ID       pgtype.UUID `json:"id"`
+	WalletID pgtype.UUID `json:"wallet_id"`
 	// CEO/admin who funded the wallet, FK users.id
-	InitiatedBy uuid.UUID `json:"initiated_by"`
-	Amount      int64     `json:"amount"`
-	Status      string    `json:"status"`
+	InitiatedBy pgtype.UUID `json:"initiated_by"`
+	Amount      int64       `json:"amount"`
+	Status      string      `json:"status"`
 	// card, bank_transfer, ussd, etc.
 	Channel *string `json:"channel"`
 	// reference used for Initialize Transaction / Verify Transaction

@@ -7,14 +7,18 @@ package dbq
 import (
 	"context"
 
-	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Querier interface {
 	CreateEmployee(ctx context.Context, arg CreateEmployeeParams) (Employee, error)
-	DeleteEmployee(ctx context.Context, id uuid.UUID) (uuid.UUID, error)
-	GetEmployeeByUserID(ctx context.Context, userID uuid.UUID) (Employee, error)
+	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	DeleteEmployee(ctx context.Context, id pgtype.UUID) (pgtype.UUID, error)
+	GetEmployeeByUserID(ctx context.Context, userID pgtype.UUID) (Employee, error)
+	GetUserByEmail(ctx context.Context, email string) (User, error)
+	GetUserByID(ctx context.Context, id pgtype.UUID) (User, error)
 	UpdateEmployee(ctx context.Context, arg UpdateEmployeeParams) (Employee, error)
+	UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (User, error)
 }
 
 var _ Querier = (*Queries)(nil)
