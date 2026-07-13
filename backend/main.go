@@ -43,11 +43,15 @@ func main() {
 	auth.POST("/logout", h.Logout)
 
 	users := v1.Group("/users", middleware.AuthRequired())
-	{
-		users.GET("/:id", h.GetUserByID)
-		users.GET("/me", h.GetCurrentUserByToken)
-		users.GET("/", h.GetAllUsers)
-	}
+
+	adminUsers := users.Group("", middleware.RoleRequired(model.RoleAdmin))
+	adminUsers.POST("", h.CreateUser)
+	adminUsers.PATCH("/:id", h.UpdateUser)
+	adminUsers.DELETE("/:id", h.DeleteUser)
+
+	users.GET("/:id", h.GetUserByID)
+	users.GET("/me", h.GetCurrentUserByToken)
+	users.GET("", h.GetAllUsers)
 
 	log.Printf("server running on port %s", PORT)
 	router.Run(PORT)

@@ -10,6 +10,7 @@ INSERT INTO users (
 )
 RETURNING *;
 
+
 -- name: GetUserByID :one
 SELECT id, first_name, last_name, email, password, role, created_at
 FROM users
